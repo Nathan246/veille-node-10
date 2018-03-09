@@ -4,8 +4,10 @@
  <button onclick="enregistrement()">Enregistrement</button>
 </section>
 <section id="chat" style="display:none">
+	<h3>Liste d'utilisateurs</h3>
 	<table id="list_user">
 	</table>
+	<h3>Bienvenue dans le chat!</h3>
 	<table id="message"></table>
 	<section id="message_a_transmettre">
 		<input type="text" name="txtMessage"><button>Transmettre</button>
@@ -36,12 +38,12 @@ Pour établir une communication socket il faut un premier appel de
 		 socket.on('diffuser_list_user', function(data) {
 		 	affiche_table_users(data);
 		 })
-		 //////////////////////////////////////////////////////////////////////////////
+		 /////////////////////////////////////////////////////////////////////////////
 		 socket.on('valide_message', function(data) {
 		 	console.log('valide_message = ' + data.message);
 		 	affiche_mon_message(data, '#0f0')
 		 })
-		 //////////////////////////////////////////////////////////////////////////////
+		 /////////////////////////////////////////////////////////////////////////////
 		 socket.on('diffuser_message', function(data) {
 		 	console.log('diffuser_message = ' + data.message);
 		 	affiche_mon_message(data,'#00f')
@@ -84,7 +86,15 @@ document.querySelector('#message_a_transmettre button').addEventListener('click'
 
  	//let sMessage = '<tr><th>Test</th><th>Test</th></tr>'
  	let date = new Date()
- 	let sMessage = '<tr><td>' + date.getHours() + ":" + date.getMinutes() + '</td><td>' + data.user + '</td><td>' + data.message + '</td></tr>'
+ 	let sMessage = ''
+ 	if(date.getMinutes() >= 0 && date.getMinutes() <= 9) {
+ 		let minutes = "0" + date.getMinutes()
+ 		sMessage = '<tr><td>' + date.getHours() + ":" + minutes + '</td><td>' + data.user + ' : <span class="ligne_message">' + data.message + '</span></td></tr>'
+ 	} else {
+ 		sMessage = '<tr><td>' + date.getHours() + ":" + date.getMinutes() + '</td><td>' + data.user + ' : <span class="ligne_message">' + data.message + '</span></td></tr>'
+ 	}
  	elmListeMessage.innerHTML += sMessage
+ 	let dernierMessage = document.querySelectorAll(".ligne_message").length - 1
+ 	document.querySelectorAll(".ligne_message")[dernierMessage].style.color = couleur
  }
 </script>
